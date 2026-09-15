@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "CormorantGaramond";
+  src: url("./assets/fonts/CormorantGaramond-SemiBold.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Typewriter";
+  src: url("./assets/fonts/JMH Typewriter-Bold.otf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Chalk";
+  src: url("./assets/fonts/Chalk.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+:root {
+  --cream: #e6dbcb;
+  --paper: #f1e8d9;
+  --paper-shadow: #d8c9ae;
+  --ink: #241811;
+  --brown-deep: #1a120c;
+  --red: #973028;
+  --red-deep: #7a2420;
+  --brass: #c9a54a;
+}
+
+.section-title {
+  font-family: "Typewriter", serif;
+}
+
+.section-subtitle {
+  font-family: "CormorantGaramond", serif;
+}
+
+.section-hand {
+  font-family: "Chalk", "CormorantGaramond", cursive;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--cream);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--red);
+  color: var(--cream);
+}
+
+/* ─── Paper grain ──────────────────────────────────────────────────────────
+   A fixed, pointer-events-none noise layer. Drop `.grain-overlay` inside any
+   `position: relative` container to break up flat colour with a faint,
+   print-like tooth — subtle enough not to fight legibility. */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.grain-overlay--dark {
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+}
+
+/* ─── Torn paper seams ─────────────────────────────────────────────────────
+   Deterministic jagged edges used at section boundaries so rooms bleed into
+   one another instead of cutting hard — jagged top, flat bottom. Rotate
+   180° (see TornSeam's `flip` prop) for the reverse orientation instead of
+   authoring a mirrored class per variant. Three variants keep consecutive
+   seams from reading as the same stamped shape. */
+.edge-torn-top {
+  clip-path: polygon(
+    0% 22%, 7% 4%, 14% 26%, 21% 8%, 28% 20%, 36% 2%, 43% 24%,
+    50% 10%, 57% 28%, 64% 6%, 71% 18%, 79% 2%, 86% 22%, 93% 8%, 100% 20%,
+    100% 100%, 0% 100%
+  );
+}
+
+.edge-torn-top-b {
+  clip-path: polygon(
+    0% 10%, 6% 24%, 13% 2%, 19% 18%, 26% 6%, 33% 22%, 40% 4%,
+    47% 20%, 54% 8%, 61% 26%, 68% 4%, 75% 16%, 82% 2%, 89% 24%, 100% 8%,
+    100% 100%, 0% 100%
+  );
+}
+
+/* Deeper, wider-spaced teeth than -top/-top-b — reads as a rougher rip
+   rather than a repeat of the other two seams. */
+.edge-torn-top-c {
+  clip-path: polygon(
+    0% 30%, 9% 0%, 18% 34%, 27% 6%, 38% 36%, 50% 2%, 62% 36%,
+    73% 6%, 82% 34%, 91% 0%, 100% 30%,
+    100% 100%, 0% 100%
+  );
+}
+
+@keyframes emberPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.06); }
+}
+
+.ember-glow {
+  animation: emberPulse 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ember-glow {
+    animation: none;
+  }
+}
