@@ -18,7 +18,7 @@ function LanguageSwitch({ className = "" }: { className?: string }) {
     <div
       role="group"
       aria-label={t.header.selectLanguage}
-      className={`inline-flex shrink-0 overflow-hidden rounded-full border border-[#973028]/40 text-xs font-semibold tracking-widest ${className}`}
+      className={`inline-flex shrink-0 overflow-hidden rounded-full border border-[#973028]/40 bg-[#e6dbcb]/90 text-xs font-semibold tracking-widest shadow-[0_2px_10px_rgba(36,24,17,0.15)] backdrop-blur-sm ${className}`}
     >
       {LANGUAGES.map((code) => (
         <button
@@ -146,9 +146,9 @@ export default function Header() {
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <div
-            className={`relative flex items-center justify-between transition-all duration-500 ${isScrolled ? "py-2.5" : "py-4 lg:py-6"}`}
+            className={`grid grid-cols-[auto_1fr_auto] items-center gap-x-4 transition-all duration-500 ${isScrolled ? "py-2.5" : "py-4 lg:py-6"}`}
           >
-            <a href="#home" className="group relative shrink-0">
+            <a href="#home" className="group relative col-start-1 shrink-0 justify-self-start">
               <img
                 src={cuibLogo}
                 alt="Cuib d'Arte"
@@ -162,16 +162,16 @@ export default function Header() {
               />
             </a>
 
-            <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-14 lg:flex xl:gap-20">
+            <nav className="col-start-2 hidden items-center justify-center gap-8 lg:flex xl:gap-14 2xl:gap-16">
               {navLinks.map((link) => (
                 <NavLink key={link.href} href={link.href} label={link.label} />
               ))}
             </nav>
 
-            <div className="hidden shrink-0 items-center gap-3 lg:flex">
+            <div className="col-start-3 hidden shrink-0 items-center justify-self-end gap-2.5 lg:flex xl:gap-3">
               <a
                 href={PHONE_HREF}
-                className="group inline-flex shrink-0 items-center gap-2.5 rounded-full border border-[#973028]/40 bg-[#e6dbcb]/90 px-5 py-2.5 text-sm font-medium tracking-wide text-[#973028] shadow-[0_2px_10px_rgba(36,24,17,0.15)] backdrop-blur-sm transition-all duration-300 hover:border-[#973028] hover:bg-[#973028] hover:text-[#e6dbcb]"
+                className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-[#973028]/40 bg-[#e6dbcb]/90 px-4 py-2 text-sm font-medium tracking-wide text-[#973028] shadow-[0_2px_10px_rgba(36,24,17,0.15)] backdrop-blur-sm transition-all duration-300 hover:border-[#973028] hover:bg-[#973028] hover:text-[#e6dbcb] xl:gap-2.5 xl:px-5 xl:py-2.5"
               >
                 <Phone
                   size={16}
@@ -183,7 +183,7 @@ export default function Header() {
               <LanguageSwitch />
             </div>
 
-            <div className="flex items-center gap-3 lg:hidden">
+            <div className="col-start-3 flex items-center justify-self-end gap-3 lg:hidden">
               <LanguageSwitch />
               <button
                 type="button"

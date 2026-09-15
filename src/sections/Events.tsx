@@ -385,6 +385,28 @@ export default function Events() {
     { scope: titleRef },
   );
 
+  const fitHeading = useCallback(() => {
+    const heading = headingRef.current;
+    const row = heading?.parentElement;
+    const container = titleRef.current;
+    if (!heading || !row || !container) return;
+
+    heading.style.fontSize = "";
+    const available = container.clientWidth - 32;
+    const needed = row.scrollWidth;
+    if (available > 0 && needed > available) {
+      const base = parseFloat(window.getComputedStyle(heading).fontSize);
+      heading.style.fontSize = `${(base * available) / needed}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    fitHeading();
+    window.addEventListener("resize", fitHeading);
+    document.fonts?.ready.then(fitHeading);
+    return () => window.removeEventListener("resize", fitHeading);
+  }, [fitHeading, t.events.title]);
+
   const [lightbox, setLightbox] = useState<{
     index: number;
     rect: DOMRect;
@@ -487,7 +509,7 @@ export default function Events() {
               />
               <h1
                 ref={headingRef}
-                className="section-title text-3xl md:text-5xl lg:text-8xl"
+                className="section-title whitespace-nowrap text-3xl md:text-5xl lg:text-8xl"
               >
                 {t.events.title}
               </h1>

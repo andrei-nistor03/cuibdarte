@@ -86,7 +86,7 @@ export const translations: Record<Language, TranslationDict> = {
     },
     memories: {
       srHeading: "Fotografii din Cuib d'Arte",
-      archiveLabel: "Unde prietenii, băuturile și muzica devin amintiri.",
+      archiveLabel: "Unde prietenii, bauturile si muzica devin amintiri.",
       viewPhotoPrefix: "Vezi fotografia",
       enlargedPhoto: "Fotografie mărită",
       close: "Închide",

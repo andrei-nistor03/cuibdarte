@@ -371,38 +371,38 @@ function Lightbox({
       className="fixed inset-0 z-100 flex items-center justify-center bg-[rgba(20,13,9,0.82)] p-6"
       style={{ backdropFilter: "blur(6px)" }}
     >
-      <button
-        ref={closeRef}
-        type="button"
-        onClick={close}
-        aria-label={t.memories.close}
-        className="absolute right-5 top-5 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-(--red) text-(--cream) shadow-xl transition duration-200 ease-out hover:scale-110 active:scale-95 md:right-8 md:top-8"
-      >
-        <X size={20} strokeWidth={2.5} />
-      </button>
-
-      <button
-        type="button"
-        onClick={() => onNavigate(-1)}
-        aria-label={t.memories.previousPhoto}
-        className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-(--red) text-(--cream) shadow-xl transition duration-200 ease-out hover:scale-110 active:scale-95 md:left-8"
-      >
-        <ChevronLeft size={24} strokeWidth={2.5} />
-      </button>
-      <button
-        type="button"
-        onClick={() => onNavigate(1)}
-        aria-label={t.memories.nextPhoto}
-        className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-(--red) text-(--cream) shadow-xl transition duration-200 ease-out hover:scale-110 active:scale-95 md:right-8"
-      >
-        <ChevronRight size={24} strokeWidth={2.5} />
-      </button>
-
       <div
         ref={frameRef}
         onClick={(e) => e.stopPropagation()}
         className="relative flex max-h-[85vh] w-[min(78vw,420px)] flex-col items-center rounded-xs bg-[#fdf8ee] p-4 pb-16 shadow-2xl sm:p-5 sm:pb-20"
       >
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={close}
+          aria-label={t.memories.close}
+          className="absolute -top-4 -right-4 z-20 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-(--red) text-(--cream) shadow-xl transition duration-200 ease-out hover:scale-110 active:scale-95"
+        >
+          <X size={18} strokeWidth={2.5} />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onNavigate(-1)}
+          aria-label={t.memories.previousPhoto}
+          className="absolute -left-10 sm:-left-16 top-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-(--red) text-(--cream) shadow-xl transition duration-200 ease-out hover:scale-110 active:scale-95"
+        >
+          <ChevronLeft size={20} strokeWidth={2.5} />
+        </button>
+        <button
+          type="button"
+          onClick={() => onNavigate(1)}
+          aria-label={t.memories.nextPhoto}
+          className="absolute -right-10 sm:-right-16 top-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-(--red) text-(--cream) shadow-xl transition duration-200 ease-out hover:scale-110 active:scale-95"
+        >
+          <ChevronRight size={20} strokeWidth={2.5} />
+        </button>
+
         <span className="block aspect-4/5 w-full overflow-hidden ring-1 ring-black/10">
           <img
             src={photo.src}
