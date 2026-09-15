@@ -6,18 +6,12 @@ import { useLanguage } from "../lib/languageContext";
 const PHONE_DISPLAY = "0723 549 318";
 const PHONE_HREF = "tel:+40723549318";
 
-/**
- * The last room of the site — the lights are lowered, the wordmark still
- * glows faintly like a sign left on.
- */
 export default function Footer() {
   const { t } = useLanguage();
   return (
     <footer className="relative overflow-hidden bg-[#241811] py-10 text-[#e6dbcb] md:py-12">
       <div className="grain-overlay grain-overlay--dark" />
 
-      {/* a dim, slowly breathing pool of warm light behind the wordmark —
-          the one lamp still lit as everyone else has gone home */}
       <div
         aria-hidden="true"
         className="ember-glow pointer-events-none absolute left-1/2 top-1/2 h-40 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-3xl md:h-56 md:w-136"

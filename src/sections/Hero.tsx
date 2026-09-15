@@ -21,14 +21,6 @@ export default function Hero() {
       ).matches;
       if (!headingRef.current || !subRef.current) return;
 
-      // Hidden state is applied up front, synchronously on mount — not
-      // inside `play()` — so the title sits invisible for the whole time
-      // the intro Loader's opaque panels are covering it. Gating the hide
-      // itself on the loader's hand-off (rather than just the reveal) was
-      // the earlier bug: the panels started sliding open well before that
-      // event fired, exposing the fully-formed, static title for a beat,
-      // which then visibly snapped to hidden and re-animated — read as a
-      // glitch rather than an entrance.
       let split: SplitText | null = null;
       if (reduced) {
         gsap.set([headingRef.current, subRef.current], { opacity: 0 });
@@ -70,10 +62,6 @@ export default function Hero() {
         );
       };
 
-      // The intro Loader's opaque panels sit on top of the hero until it's
-      // done. Wait for its hand-off event before revealing, with a timed
-      // fallback so the title still appears if the loader is ever skipped
-      // (e.g. this section is rendered standalone).
       const onLoaderDone = () => {
         window.clearTimeout(fallback);
         play();
@@ -99,8 +87,6 @@ export default function Hero() {
         alt=""
         className="absolute inset-0 h-full w-full object-cover object-left md:object-bottom-left"
       />
-      {/* Bottom fade so the next section reads as sitting on top of the
-          hero instead of the two just cutting off against each other. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 z-5 h-24 md:h-32 lg:h-40"

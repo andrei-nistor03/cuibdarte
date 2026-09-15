@@ -1,4 +1,3 @@
-/** Ambient + directional fill for the wall of books. */
 export default function SceneLighting() {
   return (
     <>

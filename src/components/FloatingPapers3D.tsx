@@ -513,11 +513,6 @@ export default function FloatingPapers3D() {
         <ambientLight intensity={1.5} />
         <directionalLight position={[3, 4, 5]} intensity={1.2} />
 
-        {/* No fallback UI: the intro `Loader` is the site's one loading
-            animation. A visible "Loading %" pill here would read as a
-            second one, popping up after the door animation finishes if the
-            (large) paper textures are still in flight — the papers just
-            pop in once ready, masked by their own flight-in tween. */}
         <Suspense fallback={null}>
           <group key={sceneKey}>
             {responsivePapers.map((paper, index) => (

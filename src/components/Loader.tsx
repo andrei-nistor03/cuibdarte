@@ -5,16 +5,6 @@ import cuibLogo from "../assets/logo.png";
 import paperTexture from "../assets/papertextureback.jpg";
 import { lockScroll } from "../lib/scrollLock";
 
-/**
- * The front door of Cuib d'Arte. Two paper-textured panels stand shut over
- * the page; the wordmark fades up, gets underlined in red, then stamped —
- * and only once the ink has "landed" do the panels swing open like heavy
- * old doors, handing the page to the Hero underneath.
- *
- * Skips itself (after a brief fade) when `prefers-reduced-motion` is set.
- * It plays on every full page load (including refreshes) — nothing is
- * persisted to skip it on a later visit in the same tab.
- */
 export default function Loader() {
   const [mounted, setMounted] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -28,16 +18,6 @@ export default function Loader() {
     () => {
       if (!rootRef.current) return;
 
-      // Scroll-lock and its release live in ONE place, with three
-      // independent paths back to the same `finish()` — natural timeline
-      // completion, the hard safety ceiling below, and this effect's own
-      // cleanup — so the page can never be left permanently un-scrollable
-      // no matter which path actually fires first. The lock itself goes
-      // through the shared, reference-counted `lockScroll()` rather than
-      // reading/writing `<html>`'s `overflow` directly — this component
-      // isn't the page's only lock holder (the mobile nav drawer is
-      // another), and two independent "snapshot then restore" locks on the
-      // same property race the moment they're ever active back to back.
       const unlock = lockScroll();
 
       let finished = false;
@@ -46,20 +26,9 @@ export default function Loader() {
         finished = true;
         unlock();
         setMounted(false);
-        // Lets whatever sits underneath (the Hero title) wait to reveal
-        // itself until the doors are actually out of the way, instead of
-        // running its own entrance in parallel where it'd finish — unseen —
-        // long before the panels ever slide open.
         window.dispatchEvent(new Event("cuib:loader-done"));
       };
 
-      // A cold first paint (fonts, the Hero's own paper canvas, this
-      // section's textures) can leave the main thread heavily contended,
-      // which stretches a rAF-driven GSAP timeline's *wall-clock* time even
-      // though its animation-time math is unaffected. Rather than trust
-      // that the timeline always resolves promptly, a hard ceiling forces
-      // the door open regardless — the intro should never be the reason a
-      // slow device keeps someone waiting.
       const safety = window.setTimeout(finish, 3200);
 
       const reduced = window.matchMedia(
@@ -79,11 +48,6 @@ export default function Loader() {
         });
         return () => {
           window.clearTimeout(safety);
-          // Kill this instance's own tween so a StrictMode phantom
-          // mount/cleanup pass can never leave it running to race the real
-          // instance's tween for who gets to call finish() first — only
-          // release the lock here, never hide the component from a
-          // teardown.
           fadeTween.kill();
           if (!finished) unlock();
         };
@@ -140,17 +104,6 @@ export default function Loader() {
           "open",
         );
 
-      // Guarantees the scroll lock specifically is never left behind by a
-      // torn-down effect instance (a real unmount, or dev StrictMode's
-      // harmless phantom mount/cleanup pass) — it deliberately does NOT
-      // call finish() here, so a phantom cleanup can never hide it before
-      // the real instance gets to animate. It DOES kill `tl`, though:
-      // without that, a StrictMode phantom pass leaves
-      // its timeline running orphaned alongside the real instance's own new
-      // timeline, and whichever of the two finishes first wins the race to
-      // unlock scroll and flip `mounted` — sometimes leaving the page
-      // permanently un-scrollable if the loser's onComplete never gets a
-      // chance to fire on a torn-down instance.
       return () => {
         window.clearTimeout(safety);
         tl.kill();
@@ -188,7 +141,6 @@ export default function Loader() {
         style={{ ...panelStyle, transformOrigin: "right center" }}
       />
 
-      {/* the crack of shadow where the two doors meet */}
       <div
         ref={crackRef}
         className="pointer-events-none absolute inset-y-0 left-1/2 w-8 -translate-x-1/2 bg-linear-to-r from-black/15 via-black/0 to-black/15"

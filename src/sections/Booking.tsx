@@ -8,9 +8,6 @@ export default function Booking() {
       id="reservation"
       className="relative scroll-mt-20 overflow-hidden bg-[#973028] pt-32 pb-14 md:min-h-190 md:py-0 lg:min-h-230"
     >
-      {/* ambient warmth behind the installation — a low, lamp-coloured pool
-          of light rather than a flat fill, so the books feel lit from
-          within the room instead of pasted on a flat red backdrop */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -21,10 +18,6 @@ export default function Booking() {
       />
       <div className="grain-overlay" />
 
-      {/* Top shadow so the section reads as sitting *under* the torn edge
-          above it — the seam itself is now plain (no shape or shadow of its
-          own; see TornSeam in App.tsx), so this section carries that depth
-          cue on its own top edge instead. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 z-5 h-24 md:h-32 lg:h-40"
@@ -33,9 +26,6 @@ export default function Booking() {
         }}
       />
 
-      {/* Bottom fade so the next seam reads as sitting on top of this
-          section instead of the two just cutting off against each other —
-          same treatment as Hero's bottom fade. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 z-5 h-24 md:h-32 lg:h-40"

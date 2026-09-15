@@ -10,7 +10,7 @@ function getInitialLanguage(): Language {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === "ro" || stored === "en") return stored;
   } catch {
-    // Private-mode / storage-disabled browsers: fall through to the default.
+    return "ro";
   }
   return "ro";
 }
@@ -27,7 +27,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, next);
     } catch {
-      // Private-mode / storage-disabled browsers: language just won't persist.
+      return;
     }
   };
 

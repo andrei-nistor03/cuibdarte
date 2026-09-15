@@ -55,11 +55,6 @@ export type TranslationDict = {
   };
 };
 
-// Every string below is either the site's original wording (kept verbatim
-// for the language it was already written in) or a faithful translation of
-// it — never a rewrite — so switching languages never changes tone or
-// meaning, only the language itself. The address and phone number are
-// intentionally excluded: they stay identical in both languages.
 export const translations: Record<Language, TranslationDict> = {
   ro: {
     nav: {

@@ -10,10 +10,6 @@ type BookProps = {
 
 function Book({ placement, index, motion }: BookProps) {
   const ref = useInstalledObject(placement, index, motion);
-
-  // Deterministic per-book playback speed (not just phase) so the grid
-  // never settles into a visible rhythm — spread via the golden ratio for
-  // a low-discrepancy scatter across a ~0.7x–1.4x range.
   const speed = 0.7 + ((index * 0.618033988749895) % 1) * 0.7;
 
   return (
@@ -29,7 +25,6 @@ type FloatingBooksProps = {
   motion: MotionRefs;
 };
 
-/** The real scanned historical book, tiled across the wall grid. */
 export default function FloatingBooks({
   placements,
   baseIndex,

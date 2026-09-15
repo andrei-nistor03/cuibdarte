@@ -64,10 +64,6 @@ body {
   color: var(--cream);
 }
 
-/* ─── Paper grain ──────────────────────────────────────────────────────────
-   A fixed, pointer-events-none noise layer. Drop `.grain-overlay` inside any
-   `position: relative` container to break up flat colour with a faint,
-   print-like tooth — subtle enough not to fight legibility. */
 .grain-overlay {
   position: absolute;
   inset: 0;
@@ -83,12 +79,6 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* ─── Torn paper seams ─────────────────────────────────────────────────────
-   Deterministic jagged edges used at section boundaries so rooms bleed into
-   one another instead of cutting hard — jagged top, flat bottom. Rotate
-   180° (see TornSeam's `flip` prop) for the reverse orientation instead of
-   authoring a mirrored class per variant. Three variants keep consecutive
-   seams from reading as the same stamped shape. */
 .edge-torn-top {
   clip-path: polygon(
     0% 22%, 7% 4%, 14% 26%, 21% 8%, 28% 20%, 36% 2%, 43% 24%,
@@ -105,8 +95,6 @@ body {
   );
 }
 
-/* Deeper, wider-spaced teeth than -top/-top-b — reads as a rougher rip
-   rather than a repeat of the other two seams. */
 .edge-torn-top-c {
   clip-path: polygon(
     0% 30%, 9% 0%, 18% 34%, 27% 6%, 38% 36%, 50% 2%, 62% 36%,

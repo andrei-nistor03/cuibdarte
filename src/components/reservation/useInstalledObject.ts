@@ -9,14 +9,6 @@ import {
   type Placement,
 } from "./motion";
 
-/**
- * Drives one floating object's transform every frame: it blends from its
- * scattered "off-scene" start into its composed resting placement as the
- * section's scroll-in assembly progresses, then layers ambient float/sway,
- * pointer parallax (scaled by the object's own depth) and the slow
- * scroll-through drift on top — each object reads the same shared motion
- * refs but reacts at its own speed via `placement.depth` / `placement.seed`.
- */
 export function useInstalledObject(
   placement: Placement,
   index: number,
@@ -62,11 +54,6 @@ export function useInstalledObject(
       base.pos[1] + floatY + pointerY,
       base.pos[2] + driftZ,
     );
-    // Order "ZYX" (rather than three.js's default "XYZ") applies the X
-    // component first/innermost and the Z component last/outermost, so a
-    // fixed X tilt (facing the camera) and a per-instance Z spin (rotating
-    // in-plane, around the axis pointing at the viewer) compose the way
-    // they visually should instead of interacting through gimbal order.
     group.rotation.set(
       base.rot[0] + swayRX,
       base.rot[1] + pointerX * 0.4,

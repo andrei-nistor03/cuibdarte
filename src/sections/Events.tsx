@@ -80,7 +80,6 @@ const posts = [
   },
 ];
 
-// Parse the static rotate class to a degree number
 function rotateClassToDeg(cls: string): number {
   const map: Record<string, number> = {
     "rotate-3": 3,
@@ -104,7 +103,6 @@ function EnvelopePost({ image, rotateDeg, index, onOpen }: EnvelopePostProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const photoRef = useRef<HTMLImageElement>(null);
 
-  // Only the photo pops up on hover — envelope stays put
   const handleMouseEnter = useCallback(() => {
     if (!photoRef.current) return;
     gsap.to(photoRef.current, {
@@ -167,8 +165,6 @@ function EnvelopePost({ image, rotateDeg, index, onOpen }: EnvelopePostProps) {
   );
 }
 
-// ─── Lightbox ────────────────────────────────────────────────────────────────
-
 type LightboxProps = {
   post: (typeof posts)[number];
   originRect: DOMRect;
@@ -183,17 +179,14 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
   const btnRef = useRef<HTMLAnchorElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  // Animate in
   useEffect(() => {
     const tl = gsap.timeline();
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // Start position: origin rect center, relative to viewport
     const startX = originRect.left + originRect.width / 2 - vw / 2;
     const startY = originRect.top + originRect.height / 2 - vh / 2;
 
-    // Backdrop fade in
     tl.fromTo(
       backdropRef.current,
       { opacity: 0 },
@@ -201,7 +194,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
       0,
     );
 
-    // Card: fly from envelope position to center, with spring
     tl.fromTo(
       cardRef.current,
       { x: startX, y: startY, scale: 0.35, opacity: 0, rotation: 8 },
@@ -217,7 +209,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
       0.05,
     );
 
-    // Photo pulls up out of card (simulate coming out of envelope)
     tl.fromTo(
       photoRef.current,
       { y: 40, opacity: 0 },
@@ -225,7 +216,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
       0.45,
     );
 
-    // Button rises in
     tl.fromTo(
       btnRef.current,
       { y: 20, opacity: 0 },
@@ -233,7 +223,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
       0.7,
     );
 
-    // Close button
     tl.fromTo(
       closeRef.current,
       { scale: 0, opacity: 0 },
@@ -269,7 +258,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
     tl.to(backdropRef.current, { opacity: 0, duration: 0.3 }, 0.15);
   }, [onClose]);
 
-  // Close on backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === backdropRef.current) close();
   };
@@ -289,7 +277,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
         className="relative flex flex-col items-center gap-6"
         style={{ willChange: "transform" }}
       >
-        {/* Close button */}
         <button
           ref={closeRef}
           onClick={close}
@@ -298,7 +285,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
           <X size={18} strokeWidth={2.5} />
         </button>
 
-        {/* Photo — pulled out of the envelope */}
         <img
           ref={photoRef}
           src={post.image}
@@ -306,7 +292,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
           className="w-72 md:w-96 lg:w-105 aspect-square object-cover shadow-2xl rounded-sm"
         />
 
-        {/* CTA */}
         <a
           ref={btnRef as React.Ref<HTMLAnchorElement>}
           href={post.link}
@@ -330,8 +315,6 @@ function Lightbox({ post, originRect, onClose }: LightboxProps) {
     </div>
   );
 }
-
-// ─── Main Section ─────────────────────────────────────────────────────────────
 
 export default function Events() {
   const { t } = useLanguage();
@@ -386,8 +369,6 @@ export default function Events() {
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
         0.1,
       );
-      // "Drawn on": the underline swipes in left-to-right, like a pen
-      // stroke, rather than just fading or sliding into place.
       tl.fromTo(
         underlineRef.current,
         { clipPath: "inset(0 100% 0 0)", opacity: 1 },
@@ -410,9 +391,7 @@ export default function Events() {
   } | null>(null);
   const isDragging = useRef(false);
 
-  // ── Inertia tilt — buttons & autoplay only, not drag ─────────────────────
   const applyInertiaTilt = useCallback((velocity: number) => {
-    // Clamp to ±8° max — subtle nudge, not a full swing
     const tiltAmount = gsap.utils.clamp(-8, 8, velocity * 400);
 
     slideRefs.current.forEach((el, i) => {
@@ -439,7 +418,6 @@ export default function Events() {
     (swiper: SwiperType) => {
       const vel = swiper.progress - lastProgress.current;
       lastProgress.current = swiper.progress;
-      // Skip inertia when the user is dragging
       if (!isDragging.current) applyInertiaTilt(vel);
     },
     [applyInertiaTilt],
@@ -453,7 +431,6 @@ export default function Events() {
     lastProgress.current = swiper.progress;
   }, []);
 
-  // Pause autoplay on envelope hover
   const pauseAutoplay = useCallback(() => {
     swiperRef.current?.autoplay.stop();
   }, []);
@@ -462,7 +439,6 @@ export default function Events() {
     swiperRef.current?.autoplay.start();
   }, []);
 
-  // Open lightbox
   const handleOpen = useCallback((index: number, rect: DOMRect) => {
     setLightbox({ index, rect });
     swiperRef.current?.autoplay.stop();
@@ -473,7 +449,6 @@ export default function Events() {
     swiperRef.current?.autoplay.start();
   }, []);
 
-  // Cleanup RAF on unmount
   useEffect(() => {
     return () => {
       if (inertiaRafId.current) cancelAnimationFrame(inertiaRafId.current);
@@ -486,8 +461,6 @@ export default function Events() {
         id="events"
         className="relative scroll-mt-20 overflow-hidden bg-[#e6dbcb] pb-20 md:pb-24 lg:pb-44"
       >
-        {/* ambient texture: quiet paper grain + a soft vignette, so the
-            section reads as a lit wall rather than a flat colour fill */}
         <div className="grain-overlay" />
         <div
           aria-hidden="true"
@@ -585,7 +558,6 @@ export default function Events() {
             >
               {posts.map((post, index) => (
                 <SwiperSlide key={index}>
-                  {/* Invisible hover zone that pauses autoplay */}
                   <div
                     onMouseEnter={pauseAutoplay}
                     onMouseLeave={resumeAutoplay}
@@ -612,7 +584,6 @@ export default function Events() {
         </div>
       </section>
 
-      {/* Lightbox */}
       {lightbox !== null && (
         <Lightbox
           post={posts[lightbox.index]}

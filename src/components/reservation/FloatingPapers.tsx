@@ -20,7 +20,6 @@ type PaperFragmentProps = {
   size: [number, number];
 };
 
-/** A single curled, printed paper fragment — same wave-vertex trick used in the Hero. */
 function PaperFragment({
   placement,
   index,

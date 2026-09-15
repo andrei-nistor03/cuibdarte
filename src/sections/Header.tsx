@@ -12,8 +12,6 @@ const PHONE_HREF = "tel:+40723549318";
 
 const LANGUAGES: Language[] = ["ro", "en"];
 
-/** RO/EN pill toggle — sits next to the phone button on desktop, and above
- * the phone link in the mobile drawer. */
 function LanguageSwitch({ className = "" }: { className?: string }) {
   const { lang, setLang, t } = useLanguage();
   return (
@@ -47,7 +45,6 @@ type NavLinkProps = {
   onClick?: () => void;
 };
 
-/** A single nav item with a hand-drawn underline that sweeps in on hover. */
 function NavLink({ href, label, onClick }: NavLinkProps) {
   return (
     <a
@@ -88,16 +85,8 @@ export default function Header() {
     };
   }, []);
 
-  // Lock page scroll while the mobile drawer is open.
   useEffect(() => {
     if (!menuOpen) return;
-    // Goes through the shared, reference-counted `lockScroll()` rather than
-    // reading/writing `<html>`'s `overflow` directly — the intro `Loader`
-    // holds the same kind of lock on first page load, and two independent
-    // "snapshot the current value, restore it later" locks on one property
-    // race the moment they're ever active back to back (this effect could
-    // easily snapshot the *Loader's* "hidden" as its own baseline, then
-    // paste that back in later and permanently re-lock scroll).
     return lockScroll();
   }, [menuOpen]);
 
@@ -209,7 +198,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* ─── Mobile drawer ─────────────────────────────────────────────── */}
       <div
         ref={overlayRef}
         className="fixed inset-0 z-100 hidden flex-col bg-[#e6dbcb] lg:hidden"
