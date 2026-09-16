@@ -36,6 +36,11 @@
   font-family: "Typewriter", serif;
 }
 
+.hero-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .section-subtitle {
   font-family: "CormorantGaramond", serif;
 }

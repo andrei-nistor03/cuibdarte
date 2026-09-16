@@ -45,6 +45,14 @@ const INTRO_DURATION_STAGGER = 0.12;
 const WIND_TWEEN_DURATION = 0.25;
 const SOFT_RETURN_DURATION = 1.4;
 const TOP_THRESHOLD = 2;
+// Mobile scroll is jittery near the top: elastic overscroll and the
+// address bar collapsing/expanding both shift scrollY back toward 0
+// mid-scroll. LEAVE_TOP_THRESHOLD adds hysteresis (must scroll past a
+// larger distance to count as "left top") and TOP_RESET_DEBOUNCE_MS
+// requires the scroll position to actually settle at the top before we
+// replay the intro, so a single jittery frame can't retrigger it.
+const LEAVE_TOP_THRESHOLD = 32;
+const TOP_RESET_DEBOUNCE_MS = 120;
 
 const frontTextures = [paperFront1, paperFront2, paperFront3, paperFront4];
 
@@ -245,7 +253,19 @@ function Paper({ data, index, scrollProgressRef, softResetKey }: PaperProps) {
   const floatBlendRef = useRef(0);
 
   const geometry = useMemo(() => {
-    const plane = new THREE.PlaneGeometry(1, 1.35, 18, 24);
+    // Fewer subdivisions on mobile: the per-vertex wave + normal
+    // recomputation in useFrame runs for every paper every frame, and
+    // mobile GPUs/CPUs can't absorb the full desktop segment count
+    // without dropping frames.
+    const isMobile =
+      typeof window !== "undefined" && window.innerWidth < 768;
+    const [widthSegments, heightSegments] = isMobile ? [8, 11] : [18, 24];
+    const plane = new THREE.PlaneGeometry(
+      1,
+      1.35,
+      widthSegments,
+      heightSegments,
+    );
     basePositionsRef.current = new Float32Array(
       plane.attributes.position.array,
     );
@@ -459,6 +479,29 @@ export default function FloatingPapers3D() {
   }, []);
 
   useEffect(() => {
+    let resetTimeoutId: number | null = null;
+
+    const clearScheduledReset = () => {
+      if (resetTimeoutId !== null) {
+        window.clearTimeout(resetTimeoutId);
+        resetTimeoutId = null;
+      }
+    };
+
+    const runTopReset = () => {
+      hasLeftTopRef.current = false;
+      scrollProgressRef.current = 0;
+
+      if (hasCompletedScrollAnimationRef.current) {
+        hasCompletedScrollAnimationRef.current = false;
+        setIsHiddenAfterFinish(false);
+        setSceneKey((key) => key + 1);
+      } else {
+        setIsHiddenAfterFinish(false);
+        setSoftResetKey((key) => key + 1);
+      }
+    };
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const atTop = scrollY <= TOP_THRESHOLD;
@@ -467,22 +510,27 @@ export default function FloatingPapers3D() {
         if (!hasLeftTopRef.current && !hasCompletedScrollAnimationRef.current)
           return;
 
-        hasLeftTopRef.current = false;
-        scrollProgressRef.current = 0;
+        if (resetTimeoutId !== null) return;
 
-        if (hasCompletedScrollAnimationRef.current) {
-          hasCompletedScrollAnimationRef.current = false;
-          setIsHiddenAfterFinish(false);
-          setSceneKey((key) => key + 1);
-        } else {
-          setIsHiddenAfterFinish(false);
-          setSoftResetKey((key) => key + 1);
-        }
+        resetTimeoutId = window.setTimeout(() => {
+          resetTimeoutId = null;
+
+          // Mobile scrollY can dip to/near 0 for a single frame (elastic
+          // overscroll, address bar collapse) without the user actually
+          // being back at the top. Re-check before committing to a replay.
+          if (window.scrollY > TOP_THRESHOLD) return;
+
+          runTopReset();
+        }, TOP_RESET_DEBOUNCE_MS);
 
         return;
       }
 
-      hasLeftTopRef.current = true;
+      clearScheduledReset();
+
+      if (scrollY > LEAVE_TOP_THRESHOLD) {
+        hasLeftTopRef.current = true;
+      }
 
       if (hasCompletedScrollAnimationRef.current) return;
 
@@ -502,14 +550,21 @@ export default function FloatingPapers3D() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearScheduledReset();
+    };
   }, []);
 
   return (
     <div
       className={`pointer-events-none fixed inset-0 z-45 h-screen w-screen ${isHiddenAfterFinish ? "hidden" : ""}`}
     >
-      <Canvas camera={cameraSettings} gl={{ alpha: true }}>
+      <Canvas
+        camera={cameraSettings}
+        gl={{ alpha: true }}
+        dpr={[1, 2]}
+      >
         <ambientLight intensity={1.5} />
         <directionalLight position={[3, 4, 5]} intensity={1.2} />
 

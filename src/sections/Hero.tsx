@@ -26,7 +26,8 @@ export default function Hero() {
         gsap.set([headingRef.current, subRef.current], { opacity: 0 });
       } else {
         split = SplitText.create(headingRef.current, {
-          type: "chars",
+          type: "words, chars",
+          wordsClass: "hero-word",
           charsClass: "hero-char",
         });
         gsap.set(split.chars, {
