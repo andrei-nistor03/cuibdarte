@@ -142,12 +142,13 @@ function EnvelopePost({ image, rotateDeg, index, onOpen }: EnvelopePostProps) {
       onMouseLeave={handleMouseLeave}
       data-envelope-index={index}
       className="relative mx-auto w-64 md:w-72 lg:w-80 aspect-[1.05/1] shrink-0 cursor-pointer"
-      style={{ willChange: "transform" }}
+      style={{ willChange: "transform", isolation: "isolate" }}
     >
       <img
         src={Envelope1}
         alt=""
         className="absolute left-0 top-0 z-10 h-full w-full object-contain drop-shadow-xl"
+        style={{ willChange: "transform" }}
       />
       <img
         ref={photoRef}
@@ -160,6 +161,7 @@ function EnvelopePost({ image, rotateDeg, index, onOpen }: EnvelopePostProps) {
         src={Envelope2}
         alt=""
         className="absolute left-0 top-0 z-30 h-full w-full object-contain drop-shadow-xl"
+        style={{ willChange: "transform" }}
       />
     </div>
   );
