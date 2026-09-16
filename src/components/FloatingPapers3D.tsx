@@ -467,7 +467,21 @@ export default function FloatingPapers3D() {
   }, []);
 
   useEffect(() => {
+    const lastWidthRef = { current: -1 };
+
     const handleResize = () => {
+      const width = window.innerWidth;
+
+      // Mobile browsers fire `resize` on nearly every scroll frame as the
+      // address bar collapses/expands (that only changes innerHeight).
+      // getResponsivePaperData()/getCameraSettings() both key off width
+      // alone and return brand-new object references each call, so
+      // updating state on every one of those events replaces each Paper's
+      // `data` prop identity mid-scroll and replays its intro tween. Only
+      // update when the width bucket actually changes.
+      if (width === lastWidthRef.current) return;
+      lastWidthRef.current = width;
+
       setResponsivePapers(getResponsivePaperData());
       setCameraSettings(getCameraSettings());
     };
