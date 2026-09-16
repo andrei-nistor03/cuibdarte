@@ -103,7 +103,7 @@ export default function Hero() {
           >
             <h1
               ref={headingRef}
-              className="section-title text-6xl md:text-8xl text-[#973028]"
+              className="section-title text-[clamp(2.75rem,6vw+1.25rem,7rem)] text-[#973028]"
             >
               {t.hero.titleLine1}
               <br />
